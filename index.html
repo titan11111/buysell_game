@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未来商店経営ゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🚀 未来商店「コスモマート」</h1>
+            <div class="status-bar">
+                <span>💰 所持金: <span id="money">1000</span>円</span>
+                <span>📅 Day <span id="day">1</span></span>
+                <span>🌟 信頼度: <span id="trust">50</span></span>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div id="message-display" class="game-message"></div>
+
+            <div id="buy-phase" class="phase-container active">
+                <h2>🛸 朝の仕入れタイム</h2>
+                <div class="seller-info">
+                    <div class="seller-portrait">👽</div>
+                    <div class="seller-details">
+                        <h3 id="seller-name">宇宙商人ゼータ</h3>
+                        <p id="seller-story">「故郷の星で見つけた古い部品です。現金が必要で...」</p>
+                    </div>
+                </div>
+                <div class="item-offer">
+                    <div class="item-card">
+                        <div class="item-icon" id="offer-icon">⚙️</div>
+                        <h4 id="offer-name">古代エンジン部品</h4>
+                        <p id="offer-description">昔の宇宙船で使われていた貴重な部品</p>
+                        <div class="price-info">
+                            <span>希望価格: <span id="offer-price">200</span>円</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="negotiation-buttons">
+                    <button class="choice-btn kind" onclick="negotiate('kind')">😊 親切に対応する</button>
+                    <button class="choice-btn neutral" onclick="negotiate('neutral')">🤝 普通に交渉する</button>
+                    <button class="choice-btn strict" onclick="negotiate('strict')">💼 厳しく値切る</button>
+                    <button class="choice-btn skip" onclick="skipBuy()">❌ 今回はパス</button>
+                </div>
+                <div class="phase-action">
+                    <button class="next-phase-btn" onclick="goToDisplayPhase()">📦 陳列フェーズへ進む</button>
+                </div>
+            </div>
+
+            <div id="display-phase" class="phase-container">
+                <h2>🏪 商品陳列</h2>
+                <div class="inventory-section">
+                    <h3>在庫商品</h3>
+                    <div id="inventory" class="inventory-grid"></div>
+                </div>
+                
+                <div class="display-options">
+                    <h3>陳列方法を選択</h3>
+                    <div class="display-buttons">
+                        <button id="display-normal" class="display-btn active" onclick="setDisplayMode('normal')">📦 普通陳列</button>
+                        <button id="display-theme" class="display-btn" onclick="setDisplayMode('theme')">🎨 テーマ展示</button>
+                        <button id="display-sale" class="display-btn" onclick="setDisplayMode('sale')">💰 安売りコーナー</button>
+                        <button id="display-premium" class="display-btn" onclick="setDisplayMode('premium')">✨ プレミアム棚</button>
+                        <button id="display-custom" class="display-btn" onclick="setDisplayMode('custom')">🏷️ カスタム価格</button>
+                    </div>
+                </div>
+                
+                <div id="price-setting-section" class="price-setting-section" style="display: none;">
+                    <h3>💰 価格設定</h3>
+                    <p>店頭の商品の価格を自由に設定できます</p>
+                    <div id="price-setting-items"></div>
+                </div>
+
+                <div class="phase-action">
+                    <button class="next-phase-btn" onclick="startSelling()">🛍️ 販売開始</button>
+                </div>
+            </div>
+
+            <div id="sell-phase" class="phase-container">
+                <h2>🛍️ お客様がいらっしゃいました</h2>
+                <div class="customer-info">
+                    <div class="customer-portrait">🤖</div>
+                    <div class="customer-details">
+                        <h3 id="customer-name">AI修理技師ロボ</h3>
+                        <p id="customer-need">「AIの部品を探しています。予算は300円です。」</p>
+                    </div>
+                </div>
+                <div class="shop-display">
+                    <h3>店頭商品</h3>
+                    <div id="shop-items" class="shop-grid"></div>
+                </div>
+                <div class="customer-actions">
+                    <button class="action-btn" onclick="customerBuy()">💳 お客様の購入判定</button>
+                    <button class="action-btn" onclick="nextCustomer()">➡️ 次のお客様</button>
+                    <button class="action-btn" onclick="endSelling()">📊 販売終了・結果を見る</button>
+                </div>
+            </div>
+
+            <div id="result-phase" class="phase-container">
+                <h2>📊 今日の結果</h2>
+                <div class="daily-results">
+                    <div class="result-item">
+                        <span>仕入れ費用:</span>
+                        <span id="buy-cost">0</span>円
+                    </div>
+                    <div class="result-item">
+                        <span>売上:</span>
+                        <span id="sell-income">0</span>円
+                    </div>
+                    <div class="result-item profit">
+                        <span>今日の利益:</span>
+                        <span id="daily-profit">0</span>円
+                    </div>
+                    <div class="result-item">
+                        <span>来店客数:</span>
+                        <span id="customer-count">0</span>人
+                    </div>
+                </div>
+                <div class="news-section">
+                    <h3>📰 明日の市場情報</h3>
+                    <p id="market-news">「宇宙旅行ブームが到来！宇宙船関連商品が人気になりそうです。」</p>
+                </div>
+                <button class="next-btn" onclick="nextDay()">🌅 明日へ進む</button>
+            </div>
+        </main>
+
+        <footer class="game-footer">
+            <p>未来商店経営ゲーム - 小学生から大人まで楽しめる！</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
